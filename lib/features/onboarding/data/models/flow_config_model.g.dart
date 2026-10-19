@@ -20,6 +20,10 @@ FlowConfigModel _$FlowConfigModelFromJson(Map<String, dynamic> json) =>
           'summary',
           (v) => SummaryModel.fromJson(v as Map<String, dynamic>),
         ),
+        paywall: $checkedConvert(
+          'paywall',
+          (v) => PaywallModel.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });

@@ -2,6 +2,7 @@ import '../entities/condition.dart';
 import '../entities/flow_config.dart';
 import '../entities/flow_step.dart';
 import '../entities/localized_text.dart';
+import '../entities/plan.dart';
 import '../entities/summary_config.dart';
 import '../entities/summary_rule.dart';
 
@@ -44,7 +45,31 @@ abstract final class FlowConfigValidator {
       }
       earlier.putIfAbsent(step.id, () => step);
     }
-    return errors..addAll(_summaryErrors(config.summary, earlier));
+    return errors
+      ..addAll(_summaryErrors(config.summary, earlier))
+      ..addAll(_planErrors(config.plans));
+  }
+
+  static List<String> _planErrors(List<Plan> plans) {
+    final ids = plans.map((p) => p.id).toList();
+    return [
+      if (plans.length < 2) 'Paywall needs at least 2 plans.',
+      if (ids.toSet().length != ids.length) 'Paywall has duplicate plan ids.',
+      if (plans.where((p) => p.defaultSelected).length != 1)
+        'Paywall needs exactly one default_selected plan.',
+      for (final plan in plans) ...[
+        if (plan.trialDays < 0) 'Plan "${plan.id}" has negative trial days.',
+        for (final MapEntry(key: field, value: text) in {
+          'title': plan.title,
+          'price_label': plan.priceLabel,
+          'period': plan.period,
+          'badge': plan.badge,
+        }.entries)
+          if (text != null && text.missingLanguages.isNotEmpty)
+            'Plan "${plan.id}" $field is missing '
+                '${text.missingLanguages.join(', ')}.',
+      ],
+    ];
   }
 
   /// Summary rules may test any step (the summary comes after them all), and

@@ -156,5 +156,11 @@
       {"show_if": {"any": [{"eq": ["experience", "beginner"]}, {"eq": ["last_trained", "over_a_year"]}]}, "text": {"en": "Starts easy: form first, intensity later", "ar": "بداية سهلة: الأداء الصحيح أولًا ثم الشدة"}},
       {"show_if": {"eq": ["experience", "advanced"]}, "text": {"en": "Progressive overload from week one", "ar": "زيادة تدريجية في الحمل من الأسبوع الأول"}}
     ]
+  },
+  "paywall": {
+    "plans": [
+      {"id": "yearly", "title": {"en": "Yearly", "ar": "سنوي"}, "price_label": {"en": "$59.99", "ar": "59.99$"}, "period": {"en": "per year — just $5 a month", "ar": "سنويًا — 5$ فقط شهريًا"}, "trial_days": 7, "badge": {"en": "Best value", "ar": "أفضل قيمة"}, "default_selected": true},
+      {"id": "monthly", "title": {"en": "Monthly", "ar": "شهري"}, "price_label": {"en": "$9.99", "ar": "9.99$"}, "period": {"en": "per month", "ar": "شهريًا"}}
+    ]
   }
 }

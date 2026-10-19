@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'flow_step.dart';
+import 'plan.dart';
 import 'summary_config.dart';
 
 /// The whole onboarding flow as loaded from config.
@@ -9,6 +10,7 @@ class FlowConfig extends Equatable {
     required this.version,
     required this.steps,
     required this.summary,
+    required this.plans,
   });
 
   /// Saved progress from a different version is discarded.
@@ -19,6 +21,9 @@ class FlowConfig extends Equatable {
 
   final SummaryConfig summary;
 
+  /// Paywall plans, in display order.
+  final List<Plan> plans;
+
   @override
-  List<Object?> get props => [version, steps, summary];
+  List<Object?> get props => [version, steps, summary, plans];
 }
