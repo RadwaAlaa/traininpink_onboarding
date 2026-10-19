@@ -181,6 +181,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See plans'**
   String get seePlans;
+
+  /// Paywall subheading when the selected plan has a trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Try it free for {days} days'**
+  String trialHeadline(int days);
+
+  /// Paywall subheading when the selected plan has no trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start training today'**
+  String get noTrialHeadline;
+
+  /// Trial line on a plan card.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}-day free trial'**
+  String planTrial(int days);
+
+  /// Paywall call-to-action for a plan with a trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start {days}-day free trial'**
+  String startTrial(int days);
+
+  /// Paywall call-to-action for a plan without a trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscribe;
+
+  /// Small print under the paywall plans.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo only — nothing is charged.'**
+  String get demoNote;
+
+  /// Done screen text for a plan with a trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {plan} plan starts with a {days}-day free trial.'**
+  String doneTrial(String plan, int days);
+
+  /// Done screen text for a plan without a trial.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re subscribed to the {plan} plan.'**
+  String doneSubscribed(String plan);
+
+  /// Done screen button that clears all progress and restarts the flow.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over'**
+  String get startOver;
 }
 
 class _AppLocalizationsDelegate

@@ -52,4 +52,41 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get seePlans => 'عرض الخطط';
+
+  @override
+  String trialHeadline(int days) {
+    return 'جرّبيها مجانًا لمدة $days أيام';
+  }
+
+  @override
+  String get noTrialHeadline => 'ابدئي التمرين اليوم';
+
+  @override
+  String planTrial(int days) {
+    return 'تجربة مجانية لمدة $days أيام';
+  }
+
+  @override
+  String startTrial(int days) {
+    return 'ابدئي التجربة المجانية ($days أيام)';
+  }
+
+  @override
+  String get subscribe => 'اشتركي';
+
+  @override
+  String get demoNote => 'نسخة تجريبية — لن يُخصم أي مبلغ.';
+
+  @override
+  String doneTrial(String plan, int days) {
+    return 'تبدأ خطتكِ «$plan» بتجربة مجانية لمدة $days أيام.';
+  }
+
+  @override
+  String doneSubscribed(String plan) {
+    return 'أنتِ مشتركة في الخطة «$plan».';
+  }
+
+  @override
+  String get startOver => 'البدء من جديد';
 }

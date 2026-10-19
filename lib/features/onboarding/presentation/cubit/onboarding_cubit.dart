@@ -48,6 +48,18 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
   }
 
+  /// Clears every answer and starts again from the first step.
+  void reset() {
+    final path = _engine.resolvePath(const {});
+    _emitAndSave(
+      OnboardingState(
+        status: OnboardingStatus.ready,
+        path: path,
+        currentStepId: path.first.id,
+      ),
+    );
+  }
+
   void selectOption(String optionId) =>
       _setAnswer(SingleChoiceAnswer(optionId));
 

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/language_toggle.dart';
 import '../../../onboarding/presentation/cubit/onboarding_cubit.dart';
 import '../../../onboarding/presentation/cubit/onboarding_state.dart';
+import '../../../paywall/presentation/cubit/paywall_cubit.dart';
 import '../../domain/plan_summary.dart';
 
 /// Her plan, built only from the answers on the path she actually took.
@@ -26,6 +27,7 @@ class _SummaryPageState extends State<SummaryPage> {
   Future<void> _seePlans() async {
     if (_opening) return;
     _opening = true;
+    context.read<PaywallCubit>().setOnPaywall(true);
     await Navigator.pushNamed(context, RouteNames.paywall);
     _opening = false;
   }

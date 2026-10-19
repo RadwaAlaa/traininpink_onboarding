@@ -63,5 +63,69 @@
   "seePlans": "See plans",
   "@seePlans": {
     "description": "Summary call-to-action that opens the paywall."
+  },
+  "trialHeadline": "Try it free for {days} days",
+  "@trialHeadline": {
+    "description": "Paywall subheading when the selected plan has a trial.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "noTrialHeadline": "Start training today",
+  "@noTrialHeadline": {
+    "description": "Paywall subheading when the selected plan has no trial."
+  },
+  "planTrial": "{days}-day free trial",
+  "@planTrial": {
+    "description": "Trial line on a plan card.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "startTrial": "Start {days}-day free trial",
+  "@startTrial": {
+    "description": "Paywall call-to-action for a plan with a trial.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscribe": "Subscribe",
+  "@subscribe": {
+    "description": "Paywall call-to-action for a plan without a trial."
+  },
+  "demoNote": "Demo only — nothing is charged.",
+  "@demoNote": {
+    "description": "Small print under the paywall plans."
+  },
+  "doneTrial": "Your {plan} plan starts with a {days}-day free trial.",
+  "@doneTrial": {
+    "description": "Done screen text for a plan with a trial.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "doneSubscribed": "You're subscribed to the {plan} plan.",
+  "@doneSubscribed": {
+    "description": "Done screen text for a plan without a trial.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "startOver": "Start over",
+  "@startOver": {
+    "description": "Done screen button that clears all progress and restarts the flow."
   }
 }

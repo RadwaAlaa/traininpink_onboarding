@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/l10n/generated/app_localizations.dart';
 import '../../core/theme/app_motion.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/paywall/presentation/pages/done_page.dart';
+import '../../features/paywall/presentation/pages/paywall_page.dart';
 import '../../features/summary/presentation/pages/summary_page.dart';
 import 'placeholder_page.dart';
 import 'route_names.dart';
@@ -12,23 +14,12 @@ abstract final class AppRouter {
     return _SlideRoute(settings: settings, builder: _builderFor(settings.name));
   }
 
-  // Paywall and done are placeholders until Phase 6.
   static WidgetBuilder _builderFor(String? name) {
     return switch (name) {
       RouteNames.onboarding => (_) => const OnboardingPage(),
       RouteNames.summary => (_) => const SummaryPage(),
-      RouteNames.paywall => (context) => PlaceholderPage(
-        title: AppLocalizations.of(context).paywallTitle,
-        actionLabel: AppLocalizations.of(context).continueLabel,
-        onAction: () => Navigator.pushNamedAndRemoveUntil(
-          context,
-          RouteNames.done,
-          (_) => false,
-        ),
-      ),
-      RouteNames.done => (context) => PlaceholderPage(
-        title: AppLocalizations.of(context).doneTitle,
-      ),
+      RouteNames.paywall => (_) => const PaywallPage(),
+      RouteNames.done => (_) => const DonePage(),
       // Splash, and any unknown route, falls back to the splash screen.
       _ => (context) => PlaceholderPage(
         title: AppLocalizations.of(context).appTitle,
