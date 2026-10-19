@@ -81,7 +81,7 @@ lib/
   main.dart                      # bootstrap: WidgetsFlutterBinding, SharedPreferences, DI, runApp
   app/
     app.dart                     # MaterialApp: theme, locales, onGenerateRoute, BlocProviders
-    di/app_dependencies.dart     # manual wiring of data sources → repositories → use cases → cubits
+    di/app_dependencies.dart     # manual wiring of data sources → repositories → cubits
     router/
       route_names.dart           # static const String splash = '/'; onboarding; summary; paywall; done
       app_router.dart            # onGenerateRoute + typed route arguments + page transitions
@@ -105,7 +105,6 @@ lib/
         entities/                # FlowConfig, Step, Option, Condition, Answer, Progress, LocalizedText
         repositories/            # abstract OnboardingRepository
         engine/flow_engine.dart  # PURE Dart branching logic — no Flutter imports
-        usecases/                # LoadFlowConfig, LoadProgress, SaveProgress, ClearProgress
       presentation/
         cubit/                   # OnboardingCubit + OnboardingState
         pages/onboarding_page.dart
@@ -135,7 +134,7 @@ Dependency rule: `presentation → domain ← data`. `domain` imports nothing fr
   Models map to immutable domain entities (`Equatable`) via `toEntity()`. Entities have no JSON code.
 - **State**: Cubit only (no Bloc events). States are immutable `Equatable` classes with `copyWith`.
   One Cubit owns one concern. UI reads with `BlocBuilder`/`BlocSelector`, side effects with `BlocListener`.
-  Cubits receive use cases through the constructor.
+  Cubits receive repository interfaces (domain) through the constructor — no use-case layer at this size.
 - **Routing**: named routes only — `Navigator.pushNamed(context, RouteNames.paywall)`.
   Route names live in `RouteNames`; arguments are typed classes, never raw maps.
   Onboarding *steps* are **not** separate routes: they are one `/onboarding` route whose content is
