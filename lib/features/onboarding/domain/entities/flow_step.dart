@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'answer.dart';
 import 'condition.dart';
 import 'localized_text.dart';
 import 'option.dart';
@@ -46,6 +47,33 @@ class FlowStep extends Equatable {
 
   bool get isChoice =>
       type == StepType.singleChoice || type == StepType.multiChoice;
+
+  /// Whether [answer] is enough to move on from this step. Blank text and
+  /// empty selections are stored as no answer at all.
+  bool isComplete(Answer? answer) => switch ((type, answer)) {
+    (StepType.multiChoice, null) => minSelections == 0,
+    (_, null) => !required,
+    (StepType.singleChoice, SingleChoiceAnswer()) => true,
+    (StepType.multiChoice, MultiChoiceAnswer(:final optionIds)) =>
+      optionIds.length >= minSelections &&
+          optionIds.length <= (maxSelected ?? options.length),
+    (StepType.text, TextAnswer()) => true,
+    (StepType.email, TextAnswer(:final value)) => isValidEmail(value),
+    _ => false,
+  };
+
+  /// Whether a multi-choice [answer] already has `maxSelected` options, so no
+  /// more can be added.
+  bool isAtMax(Answer? answer) {
+    final max = maxSelected;
+    return max != null &&
+        answer is MultiChoiceAnswer &&
+        answer.optionIds.length >= max;
+  }
+
+  /// Pragmatic check: something@something.tld, no spaces.
+  static bool isValidEmail(String value) =>
+      RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]{2,}$').hasMatch(value.trim());
 
   @override
   List<Object?> get props => [
