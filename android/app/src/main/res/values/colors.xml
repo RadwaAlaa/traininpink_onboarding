@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same as AppColors.background, so launch hands off to the app with no flash. -->
+    <color name="launch_background">#FFF7FA</color>
+</resources>

@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Shared by every model: snake_case keys, readable errors on bad JSON.
+          checked: true
+          field_rename: snake
+          explicit_to_json: true

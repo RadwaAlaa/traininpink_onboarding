@@ -1,19 +1,131 @@
 {
   "@@locale": "en",
   "appTitle": "TrainInPink",
-  "@appTitle": { "description": "App name shown in the task switcher and on the splash screen." },
+  "@appTitle": {
+    "description": "App name shown in the task switcher and on the splash screen."
+  },
   "getStarted": "Get started",
-  "@getStarted": { "description": "Splash call-to-action that starts onboarding." },
+  "@getStarted": {
+    "description": "Splash call-to-action that starts onboarding."
+  },
   "continueLabel": "Continue",
-  "@continueLabel": { "description": "Primary call-to-action that moves to the next screen." },
-  "onboardingTitle": "Tell us about you",
-  "@onboardingTitle": { "description": "Placeholder heading for the onboarding screen." },
+  "@continueLabel": {
+    "description": "Primary call-to-action that moves to the next screen."
+  },
   "summaryTitle": "Your plan",
-  "@summaryTitle": { "description": "Heading of the personalised summary screen." },
+  "@summaryTitle": {
+    "description": "Heading of the personalised summary screen."
+  },
   "paywallTitle": "Choose your plan",
-  "@paywallTitle": { "description": "Heading of the paywall screen." },
+  "@paywallTitle": {
+    "description": "Heading of the paywall screen."
+  },
   "doneTitle": "You're all set",
-  "@doneTitle": { "description": "Heading of the final confirmation screen." },
+  "@doneTitle": {
+    "description": "Heading of the final confirmation screen."
+  },
   "switchLanguage": "العربية",
-  "@switchLanguage": { "description": "Language toggle label: always the name of the OTHER language, in that language." }
+  "@switchLanguage": {
+    "description": "Language toggle label: always the name of the OTHER language, in that language."
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Call-to-action on an optional step she left blank."
+  },
+  "stepProgress": "Step {current} of {total}",
+  "@stepProgress": {
+    "description": "Screen-reader label for the onboarding progress bar.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "textHint": "Type your answer",
+  "@textHint": {
+    "description": "Placeholder in free-text answer fields."
+  },
+  "emailHint": "you@example.com",
+  "@emailHint": {
+    "description": "Placeholder in the email field."
+  },
+  "emailError": "Enter a valid email address",
+  "@emailError": {
+    "description": "Inline error under an invalid email."
+  },
+  "loadError": "We couldn't load your questions. Please restart the app.",
+  "@loadError": {
+    "description": "Shown if the bundled onboarding config fails to load."
+  },
+  "seePlans": "See plans",
+  "@seePlans": {
+    "description": "Summary call-to-action that opens the paywall."
+  },
+  "trialHeadline": "Try it free for {days} days",
+  "@trialHeadline": {
+    "description": "Paywall subheading when the selected plan has a trial.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "noTrialHeadline": "Start training today",
+  "@noTrialHeadline": {
+    "description": "Paywall subheading when the selected plan has no trial."
+  },
+  "planTrial": "{days}-day free trial",
+  "@planTrial": {
+    "description": "Trial line on a plan card.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "startTrial": "Start {days}-day free trial",
+  "@startTrial": {
+    "description": "Paywall call-to-action for a plan with a trial.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscribe": "Subscribe",
+  "@subscribe": {
+    "description": "Paywall call-to-action for a plan without a trial."
+  },
+  "demoNote": "Demo only — nothing is charged.",
+  "@demoNote": {
+    "description": "Small print under the paywall plans."
+  },
+  "doneTrial": "Your {plan} plan starts with a {days}-day free trial.",
+  "@doneTrial": {
+    "description": "Done screen text for a plan with a trial.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "doneSubscribed": "You're subscribed to the {plan} plan.",
+  "@doneSubscribed": {
+    "description": "Done screen text for a plan without a trial.",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "startOver": "Start over",
+  "@startOver": {
+    "description": "Done screen button that clears all progress and restarts the flow."
+  }
 }
