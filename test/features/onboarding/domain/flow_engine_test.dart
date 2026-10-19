@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/engine/flow_engine.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/answer.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/progress.dart';
 
 import 'sample_flow.dart';
 
@@ -143,6 +144,45 @@ void main() {
       expect(previousId('goal', answers), isNull);
       expect(nextId('email', answers), isNull);
       expect(nextId('last_trained', {}), isNull);
+    });
+  });
+
+  group('restore', () {
+    Progress saved({
+      int flowVersion = 1,
+      String currentStepId = 'name',
+      Map<String, Answer> answers = const {},
+    }) => Progress(
+      flowVersion: flowVersion,
+      currentStepId: currentStepId,
+      answers: answers,
+    );
+
+    test('keeps progress that still fits the config', () {
+      final progress = saved(
+        answers: {'goal': const SingleChoiceAnswer('build_strength')},
+      );
+
+      expect(engine.restore(progress), progress);
+    });
+
+    test('discards progress from another config version', () {
+      expect(engine.restore(saved(flowVersion: 2)), isNull);
+    });
+
+    test('drops answers off the path and restarts a step that left it', () {
+      final restored = engine.restore(
+        saved(
+          currentStepId: 'removed_step',
+          answers: {
+            'goal': const SingleChoiceAnswer('build_strength'),
+            'last_trained': const SingleChoiceAnswer('over_a_year'),
+          },
+        ),
+      );
+
+      expect(restored?.currentStepId, 'goal');
+      expect(restored?.answers.keys, ['goal']);
     });
   });
 }
