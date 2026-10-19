@@ -33,6 +33,10 @@ _To be written._
 - Target platforms are Android and iOS only (desktop/web removed).
 - One bundled font, **Cairo** (SIL OFL, `assets/fonts/OFL.txt`), covers both Latin and Arabic, so mixed EN/AR text stays visually consistent and nothing is fetched over the network.
 - No use-case layer: at this size cubits depend directly on domain repository interfaces.
+- No `start` field in the config: steps are an ordered list, so the flow starts at the first step (which can't have a `show_if`, since conditions may only reference earlier steps).
+- The optional `number` step type is cut; the flow doesn't need one. Text and email answers share one `TextAnswer` type.
+- The domain step entity is `FlowStep`, not `Step`, to avoid clashing with Flutter's material `Step` widget.
+- A step's `show_if` only sees answers to steps already on the path, so a leftover answer from a skipped step can never switch a later step on.
 
 ## What was cut and why
 
