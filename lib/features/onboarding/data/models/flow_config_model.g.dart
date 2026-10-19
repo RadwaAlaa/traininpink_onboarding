@@ -16,6 +16,10 @@ FlowConfigModel _$FlowConfigModelFromJson(Map<String, dynamic> json) =>
               .map((e) => StepModel.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
+        summary: $checkedConvert(
+          'summary',
+          (v) => SummaryModel.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
