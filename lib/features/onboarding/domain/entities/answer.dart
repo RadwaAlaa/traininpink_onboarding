@@ -15,7 +15,10 @@ final class SingleChoiceAnswer extends Answer {
 }
 
 final class MultiChoiceAnswer extends Answer {
-  const MultiChoiceAnswer(this.optionIds);
+  /// Copies into an unmodifiable set: changing a selection must build a new
+  /// answer, or state equality would hide the change.
+  MultiChoiceAnswer(Iterable<String> optionIds)
+    : optionIds = Set.unmodifiable(optionIds);
 
   final Set<String> optionIds;
 

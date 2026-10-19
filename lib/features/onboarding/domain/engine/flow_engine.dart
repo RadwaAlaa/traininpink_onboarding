@@ -39,21 +39,16 @@ class FlowEngine {
     };
   }
 
-  /// The step after [currentId] on the freshly resolved path, or null at the
-  /// end (or if [currentId] is not on the path).
-  FlowStep? next(String currentId, Map<String, Answer> answers) =>
-      _neighbour(currentId, answers, 1);
+  /// The step after [currentId] on [path], or null at the end (or if
+  /// [currentId] is not on [path]). Pass the freshly resolved path.
+  FlowStep? next(List<FlowStep> path, String currentId) =>
+      _neighbour(path, currentId, 1);
 
-  /// The step before [currentId], or null at the start.
-  FlowStep? previous(String currentId, Map<String, Answer> answers) =>
-      _neighbour(currentId, answers, -1);
+  /// The step before [currentId] on [path], or null at the start.
+  FlowStep? previous(List<FlowStep> path, String currentId) =>
+      _neighbour(path, currentId, -1);
 
-  FlowStep? _neighbour(
-    String currentId,
-    Map<String, Answer> answers,
-    int offset,
-  ) {
-    final path = resolvePath(answers);
+  FlowStep? _neighbour(List<FlowStep> path, String currentId, int offset) {
     final index = path.indexWhere((step) => step.id == currentId);
     if (index == -1) return null;
 

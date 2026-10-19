@@ -37,6 +37,8 @@ _To be written._
 - The optional `number` step type is cut; the flow doesn't need one. Text and email answers share one `TextAnswer` type.
 - The domain step entity is `FlowStep`, not `Step`, to avoid clashing with Flutter's material `Step` widget.
 - A step's `show_if` only sees answers to steps already on the path, so a leftover answer from a skipped step can never switch a later step on.
+- Conditions only branch on choice steps (`eq`/`in` on single choice, `contains` on multi choice), never on free text: exact matching on typed text is too fragile to drive the flow.
+- A required multi-choice step without `min_selected` needs at least one pick.
 
 ## What was cut and why
 

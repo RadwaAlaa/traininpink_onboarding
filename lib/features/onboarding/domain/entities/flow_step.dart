@@ -35,11 +35,14 @@ class FlowStep extends Equatable {
   final int? minSelected;
   final int? maxSelected;
 
-  /// Text steps only.
+  /// Text and email steps only.
   final int? maxLength;
 
   /// The step is on her path only if this is null or evaluates true.
   final Condition? showIf;
+
+  /// Fewest options she must pick. A required step needs at least one.
+  int get minSelections => minSelected ?? (required ? 1 : 0);
 
   bool get isChoice =>
       type == StepType.singleChoice || type == StepType.multiChoice;

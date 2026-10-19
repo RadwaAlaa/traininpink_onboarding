@@ -10,6 +10,12 @@ void main() {
   List<String> pathIds(Map<String, Answer> answers) =>
       engine.resolvePath(answers).map((s) => s.id).toList();
 
+  String? nextId(String id, Map<String, Answer> answers) =>
+      engine.next(engine.resolvePath(answers), id)?.id;
+
+  String? previousId(String id, Map<String, Answer> answers) =>
+      engine.previous(engine.resolvePath(answers), id)?.id;
+
   /// What the cubit does on every change: resolve, then prune.
   Map<String, Answer> settle(Map<String, Answer> answers) =>
       engine.pruneAnswers(engine.resolvePath(answers), answers);
@@ -24,7 +30,7 @@ void main() {
 
     test('is asked when goal is get_back_into_it', () {
       expect(pathIds({'goal': getBack}), contains('last_trained'));
-      expect(engine.next('goal', {'goal': getBack})?.id, 'last_trained');
+      expect(nextId('goal', {'goal': getBack}), 'last_trained');
     });
 
     test('switching goal to build_strength removes it from path and answers, '
@@ -32,7 +38,7 @@ void main() {
       final before = settle({
         'goal': getBack,
         'last_trained': const SingleChoiceAnswer('under_3_months'),
-        'focus_areas': const MultiChoiceAnswer({'arms'}),
+        'focus_areas': MultiChoiceAnswer({'arms'}),
         'name': const TextAnswer('Sara'),
       });
       expect(before, contains('last_trained'));
@@ -41,9 +47,9 @@ void main() {
 
       expect(pathIds(after), isNot(contains('last_trained')));
       expect(after, isNot(contains('last_trained')));
-      expect(after['focus_areas'], const MultiChoiceAnswer({'arms'}));
+      expect(after['focus_areas'], MultiChoiceAnswer({'arms'}));
       expect(after['name'], const TextAnswer('Sara'));
-      expect(engine.next('goal', after)?.id, 'focus_areas');
+      expect(nextId('goal', after), 'focus_areas');
     });
 
     test('switching back re-asks it with no stale answer', () {
@@ -86,13 +92,13 @@ void main() {
   test('multi-choice contains branch: core_pain only when core selected', () {
     expect(
       pathIds({
-        'focus_areas': const MultiChoiceAnswer({'legs', 'core'}),
+        'focus_areas': MultiChoiceAnswer({'legs', 'core'}),
       }),
       contains('core_pain'),
     );
     expect(
       pathIds({
-        'focus_areas': const MultiChoiceAnswer({'legs'}),
+        'focus_areas': MultiChoiceAnswer({'legs'}),
       }),
       isNot(contains('core_pain')),
     );
@@ -119,19 +125,24 @@ void main() {
     });
   });
 
+  test('a multi-choice answer cannot be changed in place', () {
+    final answer = MultiChoiceAnswer({'legs'});
+    expect(() => answer.optionIds.add('core'), throwsUnsupportedError);
+  });
+
   group('next / previous', () {
     final answers = {'goal': const SingleChoiceAnswer('get_back_into_it')};
 
     test('walk the resolved path in both directions', () {
-      expect(engine.previous('focus_areas', answers)?.id, 'last_trained');
-      expect(engine.previous('focus_areas', {})?.id, 'goal');
-      expect(engine.next('name', answers)?.id, 'email');
+      expect(previousId('focus_areas', answers), 'last_trained');
+      expect(previousId('focus_areas', {}), 'goal');
+      expect(nextId('name', answers), 'email');
     });
 
     test('return null at either end or for a step off the path', () {
-      expect(engine.previous('goal', answers), isNull);
-      expect(engine.next('email', answers), isNull);
-      expect(engine.next('last_trained', {}), isNull);
+      expect(previousId('goal', answers), isNull);
+      expect(nextId('email', answers), isNull);
+      expect(nextId('last_trained', {}), isNull);
     });
   });
 }
