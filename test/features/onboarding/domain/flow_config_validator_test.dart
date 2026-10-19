@@ -5,12 +5,18 @@ import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_step.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/localized_text.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/option.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_config.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_rule.dart';
 
 import 'sample_flow.dart';
 
 void main() {
   List<String> errorsWith(FlowStep extra) => FlowConfigValidator.findErrors(
-    FlowConfig(version: 1, steps: [...sampleFlow.steps, extra]),
+    FlowConfig(
+      version: 1,
+      steps: [...sampleFlow.steps, extra],
+      summary: sampleSummary,
+    ),
   );
 
   test('the sample flow is valid', () {
@@ -20,8 +26,9 @@ void main() {
 
   test('rejects an empty config', () {
     expect(
-      () =>
-          FlowConfigValidator.validate(const FlowConfig(version: 1, steps: [])),
+      () => FlowConfigValidator.validate(
+        FlowConfig(version: 1, steps: const [], summary: sampleSummary),
+      ),
       throwsA(isA<InvalidFlowConfigException>()),
     );
   });
@@ -39,10 +46,14 @@ void main() {
         single('first', ['a', 'b'], showIf: const EqCondition('second', 'a')),
         single('second', ['a', 'b']),
       ],
+      summary: SummaryConfig(
+        headlines: [SummaryRule(text: t('x'))],
+        lines: const [],
+      ),
     );
 
     expect(FlowConfigValidator.findErrors(config), [
-      contains('not an earlier step'),
+      contains('unknown or comes later'),
     ]);
   });
 
@@ -184,5 +195,45 @@ void main() {
     ], showIf: const InCondition('goal', []));
 
     expect(errorsWith(step), [contains('no values')]);
+  });
+
+  group('summary', () {
+    List<String> summaryErrors(SummaryConfig summary) =>
+        FlowConfigValidator.findErrors(
+          FlowConfig(version: 1, steps: sampleFlow.steps, summary: summary),
+        );
+
+    test('needs a last headline without a condition', () {
+      final summary = SummaryConfig(
+        headlines: [
+          SummaryRule(
+            text: t('only'),
+            showIf: const EqCondition('goal', 'build_strength'),
+          ),
+        ],
+        lines: const [],
+      );
+
+      expect(summaryErrors(summary), [contains('last headline')]);
+    });
+
+    test('checks rule conditions, languages and placeholders', () {
+      final summary = SummaryConfig(
+        headlines: [SummaryRule(text: t('{email} and {nickname}'))],
+        lines: [
+          const SummaryRule(
+            text: LocalizedText({'en': 'Hi'}),
+            showIf: EqCondition('goal', 'run_marathon'),
+          ),
+        ],
+      );
+
+      expect(summaryErrors(summary), [
+        contains('{email}'),
+        contains('{nickname}'),
+        contains('Summary line 1 is missing ar'),
+        contains('unknown option "run_marathon"'),
+      ]);
+    });
   });
 }

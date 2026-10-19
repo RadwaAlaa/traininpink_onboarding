@@ -78,6 +78,51 @@ void main() {
     expect(find.text('Your plan'), findsOneWidget);
   });
 
+  testWidgets('the summary follows an earlier answer she changes', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      const Locale('en'),
+      saved: {
+        'onboarding_progress':
+            '{"flow_version": 1, "current_step_id": "email", '
+            '"reached_summary": true, "answers": {'
+            '"goal": {"option_id": "build_strength"}, '
+            '"experience": {"option_id": "beginner"}, '
+            '"focus_areas": {"option_ids": ["glutes_legs"]}, '
+            '"days_per_week": {"option_id": "three"}, '
+            '"equipment": {"option_id": "home_none"}, '
+            '"name": {"text": "Sara"}, '
+            '"email": {"text": "sara@mail.com"}}}',
+      },
+    );
+    expect(find.text('Sara, your strength plan'), findsOneWidget);
+    expect(find.text('3 sessions a week'), findsOneWidget);
+
+    // Back to the questions: a relaunch must no longer reopen the summary.
+    await tester.tap(find.byType(BackButton));
+    await settle(tester);
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getString('onboarding_progress'),
+      contains('"reached_summary":false'),
+    );
+
+    // Walk back to the start and change her goal.
+    for (var i = 0; i < 6; i++) {
+      await tester.tap(find.byType(BackButton));
+      await settle(tester);
+    }
+    await tapText(tester, 'Tone up');
+    for (var i = 0; i < 7; i++) {
+      await tapCta(tester);
+    }
+
+    expect(find.text('Sara, your toning plan'), findsOneWidget);
+    expect(find.text('3 sessions a week'), findsOneWidget);
+  });
+
   testWidgets('back returns to the previous step with her answer kept', (
     tester,
   ) async {
