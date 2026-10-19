@@ -11,6 +11,7 @@ class OnboardingState extends Equatable {
     this.answers = const {},
     this.currentStepId = '',
     this.movedBack = false,
+    this.reachedSummary = false,
   });
 
   final OnboardingStatus status;
@@ -26,6 +27,9 @@ class OnboardingState extends Equatable {
   /// Whether the last move was backwards, so the transition can slide the
   /// other way.
   final bool movedBack;
+
+  /// She finished the questions and is on the summary; a relaunch reopens it.
+  final bool reachedSummary;
 
   // The getters below are only read while [status] is ready, when
   // [currentStepId] is always on [path].
@@ -46,14 +50,23 @@ class OnboardingState extends Equatable {
     Map<String, Answer>? answers,
     String? currentStepId,
     bool? movedBack,
+    bool? reachedSummary,
   }) => OnboardingState(
     status: status ?? this.status,
     path: path ?? this.path,
     answers: answers ?? this.answers,
     currentStepId: currentStepId ?? this.currentStepId,
     movedBack: movedBack ?? this.movedBack,
+    reachedSummary: reachedSummary ?? this.reachedSummary,
   );
 
   @override
-  List<Object?> get props => [status, path, answers, currentStepId, movedBack];
+  List<Object?> get props => [
+    status,
+    path,
+    answers,
+    currentStepId,
+    movedBack,
+    reachedSummary,
+  ];
 }

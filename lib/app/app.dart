@@ -15,14 +15,26 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If she has started, skip the splash and resume where she left off.
-    final resume = dependencies.onboardingCubit.state.hasStarted;
+    // Rebuild the stack she left: splash, then the questions if she started,
+    // the summary and paywall if she reached them. Back walks the same way.
+    // Once she has subscribed, only the done screen remains.
+    final onboarding = dependencies.onboardingCubit.state;
+    final paywall = dependencies.paywallCubit.state;
+    final initialRoutes = paywall.subscribedPlanId != null
+        ? [RouteNames.done]
+        : [
+            RouteNames.splash,
+            if (onboarding.hasStarted) RouteNames.onboarding,
+            if (onboarding.reachedSummary) RouteNames.summary,
+            if (paywall.onPaywall) RouteNames.paywall,
+          ];
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => dependencies.createLocaleCubit()),
         // Above the navigator, so the summary and paywall can read her answers.
         BlocProvider.value(value: dependencies.onboardingCubit),
+        BlocProvider.value(value: dependencies.paywallCubit),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) => MaterialApp(
@@ -31,7 +43,10 @@ class App extends StatelessWidget {
           locale: locale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
-          initialRoute: resume ? RouteNames.onboarding : RouteNames.splash,
+          onGenerateInitialRoutes: (_) => [
+            for (final name in initialRoutes)
+              AppRouter.onGenerateRoute(RouteSettings(name: name)),
+          ],
           onGenerateRoute: AppRouter.onGenerateRoute,
         ),
       ),

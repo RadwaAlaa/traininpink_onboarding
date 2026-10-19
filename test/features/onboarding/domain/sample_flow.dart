@@ -3,6 +3,9 @@ import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_step.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/localized_text.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/option.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/plan.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_config.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_rule.dart';
 
 /// Same text in both languages — content is irrelevant to branching tests.
 LocalizedText t(String text) => LocalizedText({'en': text, 'ar': text});
@@ -59,5 +62,47 @@ final sampleFlow = FlowConfig(
     ),
     FlowStep(id: 'name', type: StepType.text, title: t('name'), maxLength: 40),
     FlowStep(id: 'email', type: StepType.email, title: t('email')),
+  ],
+  summary: sampleSummary,
+  plans: samplePlans,
+);
+
+final samplePlans = [
+  Plan(
+    id: 'yearly',
+    title: t('Yearly'),
+    priceLabel: t(r'$60'),
+    period: t('per year'),
+    trialDays: 7,
+    badge: t('Best value'),
+    defaultSelected: true,
+  ),
+  Plan(
+    id: 'monthly',
+    title: t('Monthly'),
+    priceLabel: t(r'$10'),
+    period: t('per month'),
+  ),
+];
+
+/// Headline picks on goal, with an unconditional fallback; lines come from
+/// a nested branch and a multi-choice, and `{name}` fills in her name.
+final sampleSummary = SummaryConfig(
+  headlines: [
+    SummaryRule(
+      text: t('{name}: comeback'),
+      showIf: const EqCondition('goal', 'get_back_into_it'),
+    ),
+    SummaryRule(text: t('{name}: your plan')),
+  ],
+  lines: [
+    SummaryRule(
+      text: t('gentle start'),
+      showIf: const EqCondition('restart_pace', 'gentle'),
+    ),
+    SummaryRule(
+      text: t('core finisher'),
+      showIf: const ContainsCondition('focus_areas', 'core'),
+    ),
   ],
 );

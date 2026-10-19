@@ -142,4 +142,40 @@ void main() {
     cubit.selectOption('build_strength');
     expect(repository.saved, isNull);
   });
+
+  test('reaching the summary is saved and survives a relaunch', () async {
+    final cubit = await loaded(
+      saved: Progress(
+        flowVersion: 1,
+        currentStepId: 'email',
+        answers: {
+          'goal': const SingleChoiceAnswer('lose_weight'),
+          'focus_areas': MultiChoiceAnswer({'legs'}),
+          'heavy_lifting': const SingleChoiceAnswer('no'),
+          'name': const TextAnswer('Sara'),
+          'email': const TextAnswer('sara@mail.com'),
+        },
+      ),
+    );
+    cubit.setReachedSummary(true);
+    expect(repository.saved?.reachedSummary, isTrue);
+
+    final relaunched = OnboardingCubit(repository);
+    await relaunched.load();
+    expect(relaunched.state.reachedSummary, isTrue);
+  });
+
+  test('reset clears answers and starts at the first step', () async {
+    final cubit = await loaded();
+    cubit
+      ..selectOption('get_back_into_it')
+      ..next()
+      ..setReachedSummary(true)
+      ..reset();
+
+    expect(cubit.state.currentStepId, 'goal');
+    expect(cubit.state.answers, isEmpty);
+    expect(repository.saved?.reachedSummary, isFalse);
+    expect(repository.saved?.answers, isEmpty);
+  });
 }

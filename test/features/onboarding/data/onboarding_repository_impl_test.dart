@@ -44,7 +44,11 @@ void main() {
   test('rejects a config that fails validation', () async {
     final repository = await repositoryWith(
       {},
-      bundle: _StringBundle('{"version": 1, "steps": []}'),
+      bundle: _StringBundle(
+        '{"version": 1, "steps": [], '
+        '"summary": {"headlines": [], "lines": []}, '
+        '"paywall": {"plans": []}}',
+      ),
     );
 
     expect(

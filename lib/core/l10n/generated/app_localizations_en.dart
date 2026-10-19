@@ -50,4 +50,44 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get loadError =>
       'We couldn\'t load your questions. Please restart the app.';
+
+  @override
+  String get seePlans => 'See plans';
+
+  @override
+  String trialHeadline(int days) {
+    return 'Try it free for $days days';
+  }
+
+  @override
+  String get noTrialHeadline => 'Start training today';
+
+  @override
+  String planTrial(int days) {
+    return '$days-day free trial';
+  }
+
+  @override
+  String startTrial(int days) {
+    return 'Start $days-day free trial';
+  }
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get demoNote => 'Demo only — nothing is charged.';
+
+  @override
+  String doneTrial(String plan, int days) {
+    return 'Your $plan plan starts with a $days-day free trial.';
+  }
+
+  @override
+  String doneSubscribed(String plan) {
+    return 'You\'re subscribed to the $plan plan.';
+  }
+
+  @override
+  String get startOver => 'Start over';
 }

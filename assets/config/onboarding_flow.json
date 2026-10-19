@@ -130,5 +130,37 @@
       "title": { "en": "Where should we send your plan?", "ar": "إلى أين نرسل خطتكِ؟" },
       "subtitle": { "en": "We'll only use it for your plan — no spam.", "ar": "سنستخدمه لخطتكِ فقط — بلا رسائل مزعجة." }
     }
-  ]
+  ],
+  "summary": {
+    "headlines": [
+      {"show_if": {"eq": ["restart_pace", "gentle"]}, "text": {"en": "{name}, your gentle comeback plan", "ar": "{name}، هذه خطة عودتكِ الهادئة"}},
+      {"show_if": {"eq": ["goal", "get_back_into_it"]}, "text": {"en": "{name}, your comeback plan", "ar": "{name}، هذه خطة عودتكِ"}},
+      {"show_if": {"eq": ["goal", "build_strength"]}, "text": {"en": "{name}, your strength plan", "ar": "{name}، هذه خطة القوة الخاصة بكِ"}},
+      {"show_if": {"eq": ["goal", "lose_weight"]}, "text": {"en": "{name}, your fat-loss plan", "ar": "{name}، هذه خطة خسارة الوزن الخاصة بكِ"}},
+      {"text": {"en": "{name}, your toning plan", "ar": "{name}، هذه خطة شدّ الجسم الخاصة بكِ"}}
+    ],
+    "lines": [
+      {"show_if": {"eq": ["days_per_week", "two"]}, "text": {"en": "2 full-body sessions a week", "ar": "جلستان للجسم بالكامل أسبوعيًا"}},
+      {"show_if": {"eq": ["days_per_week", "three"]}, "text": {"en": "3 sessions a week", "ar": "3 جلسات أسبوعيًا"}},
+      {"show_if": {"eq": ["days_per_week", "four"]}, "text": {"en": "4 sessions a week, split upper and lower body", "ar": "4 جلسات أسبوعيًا، مقسّمة بين الجزء العلوي والسفلي"}},
+      {"show_if": {"eq": ["days_per_week", "five_plus"]}, "text": {"en": "5 sessions a week, including 2 light recovery days", "ar": "5 جلسات أسبوعيًا، منها يومان للتعافي الخفيف"}},
+      {"show_if": {"eq": ["equipment", "home_none"]}, "text": {"en": "Bodyweight workouts you can do at home", "ar": "تمارين بوزن الجسم يمكنكِ أداؤها في المنزل"}},
+      {"show_if": {"eq": ["equipment", "home_dumbbells"]}, "text": {"en": "Home workouts built around your dumbbells", "ar": "تمارين منزلية مبنية على أثقالكِ اليدوية"}},
+      {"show_if": {"eq": ["equipment", "gym"]}, "text": {"en": "Gym sessions with machines and free weights", "ar": "جلسات في النادي بالأجهزة والأوزان الحرة"}},
+      {"show_if": {"eq": ["barbell", "yes"]}, "text": {"en": "Barbell squats, deadlifts and presses, coached step by step", "ar": "تمارين البار الحديدي خطوة بخطوة: القرفصاء والرفعة الميتة والضغط"}},
+      {"show_if": {"contains": ["focus_areas", "glutes_legs"]}, "text": {"en": "Extra glute and leg work", "ar": "تمارين إضافية للأرداف والساقين"}},
+      {"show_if": {"contains": ["focus_areas", "core"]}, "text": {"en": "A core finisher in every session", "ar": "تمرين ختامي للجذع في كل جلسة"}},
+      {"show_if": {"contains": ["focus_areas", "arms_back"]}, "text": {"en": "Upper-body sculpting for arms and back", "ar": "نحت الجزء العلوي للذراعين والظهر"}},
+      {"show_if": {"contains": ["focus_areas", "full_body"]}, "text": {"en": "Balanced full-body training", "ar": "تدريب متوازن للجسم بالكامل"}},
+      {"show_if": {"in": ["back_pain", ["often", "sometimes"]]}, "text": {"en": "Back-friendly core moves — no crunches", "ar": "تمارين جذع لطيفة على الظهر — بلا تمارين البطن التقليدية"}},
+      {"show_if": {"any": [{"eq": ["experience", "beginner"]}, {"eq": ["last_trained", "over_a_year"]}]}, "text": {"en": "Starts easy: form first, intensity later", "ar": "بداية سهلة: الأداء الصحيح أولًا ثم الشدة"}},
+      {"show_if": {"eq": ["experience", "advanced"]}, "text": {"en": "Progressive overload from week one", "ar": "زيادة تدريجية في الحمل من الأسبوع الأول"}}
+    ]
+  },
+  "paywall": {
+    "plans": [
+      {"id": "yearly", "title": {"en": "Yearly", "ar": "سنوي"}, "price_label": {"en": "$59.99", "ar": "59.99$"}, "period": {"en": "per year — just $5 a month", "ar": "سنويًا — 5$ فقط شهريًا"}, "trial_days": 7, "badge": {"en": "Best value", "ar": "أفضل قيمة"}, "default_selected": true},
+      {"id": "monthly", "title": {"en": "Monthly", "ar": "شهري"}, "price_label": {"en": "$9.99", "ar": "9.99$"}, "period": {"en": "per month", "ar": "شهريًا"}}
+    ]
+  }
 }

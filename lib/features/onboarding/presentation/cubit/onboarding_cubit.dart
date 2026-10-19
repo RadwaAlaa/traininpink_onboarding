@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/engine/flow_engine.dart';
+import '../../domain/entities/flow_config.dart';
 import '../../domain/entities/answer.dart';
 import '../../domain/entities/progress.dart';
 import '../../domain/repositories/onboarding_repository.dart';
@@ -19,6 +20,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   /// Set by [load] before the state becomes ready; every other method runs
   /// only on a ready state.
   late FlowEngine _engine;
+
+  /// The loaded config, for the summary (and later the paywall).
+  FlowConfig get config => _engine.config;
 
   Future<void> load() async {
     try {
@@ -39,6 +43,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         path: path,
         answers: answers,
         currentStepId: restored?.currentStepId ?? path.first.id,
+        reachedSummary: restored?.reachedSummary ?? false,
+      ),
+    );
+  }
+
+  /// Clears every answer and starts again from the first step.
+  void reset() {
+    final path = _engine.resolvePath(const {});
+    _emitAndSave(
+      OnboardingState(
+        status: OnboardingStatus.ready,
+        path: path,
+        currentStepId: path.first.id,
       ),
     );
   }
@@ -82,6 +99,11 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     _emitAndSave(state.copyWith(currentStepId: target.id, movedBack: true));
   }
 
+  /// Called when she moves on to the summary, and with false when she comes
+  /// back from it to edit an answer.
+  void setReachedSummary(bool reached) =>
+      _emitAndSave(state.copyWith(reachedSummary: reached));
+
   /// Applies an answer to the current step, then re-routes: the path is
   /// re-resolved and answers that fell off it are pruned.
   void _setAnswer(Answer? answer) {
@@ -103,6 +125,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
           flowVersion: _engine.config.version,
           currentStepId: next.currentStepId,
           answers: next.answers,
+          reachedSummary: next.reachedSummary,
         ),
       ),
     );

@@ -2,6 +2,9 @@ import '../entities/condition.dart';
 import '../entities/flow_config.dart';
 import '../entities/flow_step.dart';
 import '../entities/localized_text.dart';
+import '../entities/plan.dart';
+import '../entities/summary_config.dart';
+import '../entities/summary_rule.dart';
 
 /// Thrown when the bundled config breaks a rule. Lists every problem at once.
 class InvalidFlowConfigException implements Exception {
@@ -36,9 +39,84 @@ abstract final class FlowConfigValidator {
 
       final condition = step.showIf;
       if (condition != null) {
-        errors.addAll(_conditionErrors(step.id, condition, earlier));
+        errors.addAll(
+          _conditionErrors('Step "${step.id}"', condition, earlier),
+        );
       }
-      earlier[step.id] = step;
+      earlier.putIfAbsent(step.id, () => step);
+    }
+    return errors
+      ..addAll(_summaryErrors(config.summary, earlier))
+      ..addAll(_planErrors(config.plans));
+  }
+
+  static List<String> _planErrors(List<Plan> plans) {
+    final ids = plans.map((p) => p.id).toList();
+    return [
+      if (plans.length < 2) 'Paywall needs at least 2 plans.',
+      if (ids.toSet().length != ids.length) 'Paywall has duplicate plan ids.',
+      if (plans.where((p) => p.defaultSelected).length != 1)
+        'Paywall needs exactly one default_selected plan.',
+      for (final plan in plans) ...[
+        if (plan.trialDays < 0) 'Plan "${plan.id}" has negative trial days.',
+        for (final MapEntry(key: field, value: text) in {
+          'title': plan.title,
+          'price_label': plan.priceLabel,
+          'period': plan.period,
+          'badge': plan.badge,
+        }.entries)
+          if (text != null && text.missingLanguages.isNotEmpty)
+            'Plan "${plan.id}" $field is missing '
+                '${text.missingLanguages.join(', ')}.',
+      ],
+    ];
+  }
+
+  /// Summary rules may test any step (the summary comes after them all), and
+  /// may only fill in placeholders from text steps every path answers.
+  static List<String> _summaryErrors(
+    SummaryConfig summary,
+    Map<String, FlowStep> steps,
+  ) {
+    final errors = <String>[];
+    if (summary.headlines.isEmpty || summary.headlines.last.showIf != null) {
+      errors.add('Summary needs a last headline without show_if.');
+    }
+
+    final rules = {
+      for (final (i, rule) in summary.headlines.indexed)
+        'Summary headline ${i + 1}': rule,
+      for (final (i, rule) in summary.lines.indexed)
+        'Summary line ${i + 1}': rule,
+    };
+    for (final MapEntry(key: owner, value: rule) in rules.entries) {
+      if (rule.text.missingLanguages.isNotEmpty) {
+        errors.add(
+          '$owner is missing ${rule.text.missingLanguages.join(', ')}.',
+        );
+      }
+      final condition = rule.showIf;
+      if (condition != null) {
+        errors.addAll(_conditionErrors(owner, condition, steps));
+      }
+      // Every language uses the same placeholders; report each one once.
+      final placeholders = {
+        for (final text in rule.text.values.values)
+          for (final match in SummaryRule.placeholder.allMatches(text))
+            match.group(1),
+      };
+      for (final id in placeholders) {
+        final target = steps[id];
+        if (target == null ||
+            target.type != StepType.text ||
+            target.showIf != null ||
+            !target.required) {
+          errors.add(
+            '$owner uses {$id}, which is not a required, always-shown '
+            'text step.',
+          );
+        }
+      }
     }
     return errors;
   }
@@ -91,21 +169,21 @@ abstract final class FlowConfigValidator {
   }
 
   static List<String> _conditionErrors(
-    String stepId,
+    String owner,
     Condition condition,
     Map<String, FlowStep> earlier,
   ) {
     final errors = <String>[];
     if (_hasEmptyGroup(condition)) {
-      errors.add('Step "$stepId" has an empty all/any condition.');
+      errors.add('$owner has an empty all/any condition.');
     }
 
     for (final leaf in condition.leaves) {
       final target = earlier[leaf.stepId];
       if (target == null) {
         errors.add(
-          'Step "$stepId" condition references "${leaf.stepId}", '
-          'which is not an earlier step.',
+          '$owner condition references "${leaf.stepId}", '
+          'which is unknown or comes later.',
         );
         continue;
       }
@@ -118,19 +196,19 @@ abstract final class FlowConfigValidator {
       };
       if (!validType) {
         errors.add(
-          'Step "$stepId" uses ${leaf.runtimeType} on "${target.id}" '
+          '$owner uses ${leaf.runtimeType} on "${target.id}" '
           '(${target.type.name}).',
         );
       }
 
       if (leaf.values.isEmpty) {
-        errors.add('Step "$stepId" has an "in" condition with no values.');
+        errors.add('$owner has an "in" condition with no values.');
       }
 
       final optionIds = target.options.map((o) => o.id).toSet();
       for (final value in leaf.values.where((v) => !optionIds.contains(v))) {
         errors.add(
-          'Step "$stepId" condition references unknown option '
+          '$owner condition references unknown option '
           '"$value" of "${target.id}".',
         );
       }

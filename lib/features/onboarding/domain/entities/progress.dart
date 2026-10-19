@@ -8,6 +8,7 @@ class Progress extends Equatable {
     required this.flowVersion,
     required this.currentStepId,
     required this.answers,
+    this.reachedSummary = false,
   });
 
   /// The config version this was saved against; other versions are discarded.
@@ -15,6 +16,14 @@ class Progress extends Equatable {
   final String currentStepId;
   final Map<String, Answer> answers;
 
+  /// She finished the questions and is on the summary (or beyond).
+  final bool reachedSummary;
+
   @override
-  List<Object?> get props => [flowVersion, currentStepId, answers];
+  List<Object?> get props => [
+    flowVersion,
+    currentStepId,
+    answers,
+    reachedSummary,
+  ];
 }

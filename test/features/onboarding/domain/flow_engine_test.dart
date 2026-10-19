@@ -152,10 +152,12 @@ void main() {
       int flowVersion = 1,
       String currentStepId = 'name',
       Map<String, Answer> answers = const {},
+      bool reachedSummary = false,
     }) => Progress(
       flowVersion: flowVersion,
       currentStepId: currentStepId,
       answers: answers,
+      reachedSummary: reachedSummary,
     );
 
     test('keeps progress that still fits the config', () {
@@ -183,6 +185,24 @@ void main() {
 
       expect(restored?.currentStepId, 'goal');
       expect(restored?.answers.keys, ['goal']);
+    });
+
+    test('reopens the summary only if every step on the path is answered', () {
+      final answers = {
+        'goal': const SingleChoiceAnswer('build_strength'),
+        'focus_areas': MultiChoiceAnswer({'legs'}),
+        'heavy_lifting': const SingleChoiceAnswer('yes'),
+        'name': const TextAnswer('Sara'),
+        'email': const TextAnswer('sara@mail.com'),
+      };
+      Progress atSummary(Map<String, Answer> answers) =>
+          saved(currentStepId: 'email', answers: answers, reachedSummary: true);
+
+      expect(engine.restore(atSummary(answers))?.reachedSummary, isTrue);
+      expect(
+        engine.restore(atSummary({...answers}..remove('name')))?.reachedSummary,
+        isFalse,
+      );
     });
   });
 }

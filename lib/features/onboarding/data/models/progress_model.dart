@@ -11,6 +11,7 @@ class ProgressModel {
     required this.flowVersion,
     required this.currentStepId,
     required this.answers,
+    this.reachedSummary = false,
   });
 
   factory ProgressModel.fromJson(Map<String, dynamic> json) =>
@@ -22,11 +23,13 @@ class ProgressModel {
     answers: progress.answers.map(
       (stepId, answer) => MapEntry(stepId, AnswerModel.fromEntity(answer)),
     ),
+    reachedSummary: progress.reachedSummary,
   );
 
   final int flowVersion;
   final String currentStepId;
   final Map<String, AnswerModel> answers;
+  final bool reachedSummary;
 
   Map<String, dynamic> toJson() => _$ProgressModelToJson(this);
 
@@ -36,5 +39,6 @@ class ProgressModel {
     answers: answers.map(
       (stepId, answer) => MapEntry(stepId, answer.toEntity()),
     ),
+    reachedSummary: reachedSummary,
   );
 }
