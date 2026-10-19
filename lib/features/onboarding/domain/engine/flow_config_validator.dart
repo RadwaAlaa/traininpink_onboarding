@@ -32,7 +32,7 @@ abstract final class FlowConfigValidator {
       }
       errors
         ..addAll(_textErrors(step))
-        ..addAll(_optionErrors(step));
+        ..addAll(_fieldErrors(step));
 
       final condition = step.showIf;
       if (condition != null) {
@@ -56,22 +56,36 @@ abstract final class FlowConfigValidator {
     ];
   }
 
-  static List<String> _optionErrors(FlowStep step) {
-    if (!step.isChoice) return const [];
-
+  static List<String> _fieldErrors(FlowStep step) {
     final errors = <String>[];
-    final ids = step.options.map((o) => o.id).toList();
-    if (ids.length < 2) {
-      errors.add('Step "${step.id}" needs at least 2 options.');
-    }
-    if (ids.toSet().length != ids.length) {
-      errors.add('Step "${step.id}" has duplicate option ids.');
+    void check(bool ok, String problem) {
+      if (!ok) errors.add('Step "${step.id}" $problem.');
     }
 
-    final min = step.minSelected ?? 0;
-    final max = step.maxSelected ?? ids.length;
-    if (min < 0 || min > max || max > ids.length) {
-      errors.add('Step "${step.id}" has invalid min/max selected.');
+    final isMulti = step.type == StepType.multiChoice;
+    check(
+      isMulti || (step.minSelected == null && step.maxSelected == null),
+      'sets min/max selected but is not multi choice',
+    );
+    if (!step.isChoice) {
+      check(step.options.isEmpty, 'has options but is not a choice step');
+      final maxLength = step.maxLength;
+      check(maxLength == null || maxLength > 0, 'has a max length below 1');
+      return errors;
+    }
+
+    check(step.maxLength == null, 'sets max length on a choice step');
+    final ids = step.options.map((o) => o.id).toList();
+    check(ids.length >= 2, 'needs at least 2 options');
+    check(ids.toSet().length == ids.length, 'has duplicate option ids');
+
+    if (isMulti) {
+      final min = step.minSelections;
+      final max = step.maxSelected ?? ids.length;
+      check(
+        min >= 0 && min <= max && max <= ids.length,
+        'has invalid min/max selected',
+      );
     }
     return errors;
   }
@@ -96,9 +110,10 @@ abstract final class FlowConfigValidator {
         continue;
       }
 
+      // Free-text answers are never branched on: exact string matching on
+      // what she typed is too fragile to drive the flow.
       final validType = switch (leaf) {
-        EqCondition() => target.type != StepType.multiChoice,
-        InCondition() => target.type == StepType.singleChoice,
+        EqCondition() || InCondition() => target.type == StepType.singleChoice,
         ContainsCondition() => target.type == StepType.multiChoice,
       };
       if (!validType) {
@@ -108,14 +123,16 @@ abstract final class FlowConfigValidator {
         );
       }
 
-      if (target.isChoice) {
-        final optionIds = target.options.map((o) => o.id).toSet();
-        for (final value in leaf.values.where((v) => !optionIds.contains(v))) {
-          errors.add(
-            'Step "$stepId" condition references unknown option '
-            '"$value" of "${target.id}".',
-          );
-        }
+      if (leaf.values.isEmpty) {
+        errors.add('Step "$stepId" has an "in" condition with no values.');
+      }
+
+      final optionIds = target.options.map((o) => o.id).toSet();
+      for (final value in leaf.values.where((v) => !optionIds.contains(v))) {
+        errors.add(
+          'Step "$stepId" condition references unknown option '
+          '"$value" of "${target.id}".',
+        );
       }
     }
     return errors;

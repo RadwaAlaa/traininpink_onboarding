@@ -19,14 +19,14 @@ sealed class AnswerCondition extends Condition {
 
   final String stepId;
 
-  /// The option ids (or text values) this condition compares against.
+  /// The option ids this condition compares against.
   List<String> get values;
 
   @override
   Iterable<AnswerCondition> get leaves => [this];
 }
 
-/// `{"eq": [stepId, value]}` — single choice is [value], or text equals it.
+/// `{"eq": [stepId, value]}` — single choice is [value].
 final class EqCondition extends AnswerCondition {
   const EqCondition(super.stepId, this.value);
 
@@ -38,7 +38,6 @@ final class EqCondition extends AnswerCondition {
   @override
   bool evaluate(Map<String, Answer> answers) => switch (answers[stepId]) {
     SingleChoiceAnswer(:final optionId) => optionId == value,
-    TextAnswer(value: final text) => text == value,
     _ => false,
   };
 

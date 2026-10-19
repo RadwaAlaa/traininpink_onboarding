@@ -97,4 +97,92 @@ void main() {
       contains('invalid min/max'),
     ]);
   });
+
+  test('rejects maxSelected above the option count', () {
+    final step = FlowStep(
+      id: 'extra',
+      type: StepType.multiChoice,
+      title: t('extra'),
+      options: options(['a', 'b', 'c']),
+      maxSelected: 5,
+    );
+
+    expect(errorsWith(step), [contains('invalid min/max')]);
+  });
+
+  test('rejects minSelected above maxSelected', () {
+    final step = FlowStep(
+      id: 'extra',
+      type: StepType.multiChoice,
+      title: t('extra'),
+      options: options(['a', 'b', 'c']),
+      minSelected: 3,
+      maxSelected: 2,
+    );
+
+    expect(errorsWith(step), [contains('invalid min/max')]);
+  });
+
+  test(
+    'a required multi-choice step needs one pick unless it says otherwise',
+    () {
+      final step = FlowStep(
+        id: 'extra',
+        type: StepType.multiChoice,
+        title: t('extra'),
+        options: options(['a', 'b']),
+      );
+
+      expect(step.minSelections, 1);
+    },
+  );
+
+  test('rejects fields that do not belong to the step type', () {
+    final text = FlowStep(
+      id: 'extra',
+      type: StepType.text,
+      title: t('extra'),
+      options: options(['a', 'b']),
+      maxLength: 0,
+    );
+    final choice = single('extra', ['a', 'b']);
+    final singleWithLimits = FlowStep(
+      id: choice.id,
+      type: choice.type,
+      title: choice.title,
+      options: choice.options,
+      maxSelected: 1,
+      maxLength: 10,
+    );
+
+    expect(errorsWith(text), [
+      contains('has options'),
+      contains('max length below 1'),
+    ]);
+    expect(errorsWith(singleWithLimits), [
+      contains('min/max selected but is not multi choice'),
+      contains('max length on a choice step'),
+    ]);
+  });
+
+  test('rejects conditions on free-text steps', () {
+    final step = single('extra', [
+      'a',
+      'b',
+    ], showIf: const EqCondition('name', 'Sara'));
+
+    expect(errorsWith(step), [
+      contains('EqCondition on "name"'),
+      contains('unknown option "Sara"'),
+    ]);
+  });
+
+  test('rejects an "in" condition with no values', () {
+    final step = single('extra', [
+      'a',
+      'b',
+    ], showIf: const InCondition('goal', []));
+
+    expect(errorsWith(step), [contains('no values')]);
+  });
 }
