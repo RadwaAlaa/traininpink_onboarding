@@ -76,6 +76,87 @@ void main() {
     await typeText(tester, 'sara@mail.com');
     await tapCta(tester);
     expect(find.text('Your plan'), findsOneWidget);
+
+    await tapCta(tester);
+    expect(find.text('Choose your plan'), findsOneWidget);
+    await tapText(tester, 'Monthly');
+    expect(find.text('Subscribe'), findsOneWidget);
+    await tapText(tester, 'Yearly');
+    await tapCta(tester);
+
+    expect(
+      find.text('Your Yearly plan starts with a 7-day free trial.'),
+      findsOneWidget,
+    );
+    expect(find.byType(BackButton), findsNothing);
+  });
+
+  testWidgets('relaunching after subscribing shows only the done screen', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      const Locale('en'),
+      saved: {
+        'paywall_progress':
+            '{"selected_plan_id": "monthly", '
+            '"subscribed_plan_id": "monthly"}',
+      },
+    );
+
+    expect(find.text("You're subscribed to the Monthly plan."), findsOneWidget);
+    expect(find.byType(BackButton), findsNothing);
+
+    // Start over clears everything and returns to the splash.
+    await tapText(tester, 'Start over');
+    expect(find.text('Get started'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('paywall_progress'), isNot(contains('subscribed')));
+  });
+
+  testWidgets('a stale "on the paywall" flag without a summary is cleared', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      const Locale('en'),
+      saved: {'paywall_progress': '{"on_paywall": true}'},
+    );
+
+    expect(find.text('Get started'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getString('paywall_progress'),
+      isNot(contains('on_paywall":true')),
+    );
+  });
+
+  testWidgets('relaunching on the paywall keeps her plan; back reaches the '
+      'summary', (tester) async {
+    await pumpApp(
+      tester,
+      const Locale('en'),
+      saved: {
+        'onboarding_progress':
+            '{"flow_version": 1, "current_step_id": "email", '
+            '"reached_summary": true, "answers": {'
+            '"goal": {"option_id": "tone_up"}, '
+            '"experience": {"option_id": "beginner"}, '
+            '"focus_areas": {"option_ids": ["core"]}, '
+            '"back_pain": {"option_id": "never"}, '
+            '"days_per_week": {"option_id": "two"}, '
+            '"equipment": {"option_id": "gym"}, '
+            '"name": {"text": "Sara"}, '
+            '"email": {"text": "sara@mail.com"}}}',
+        'paywall_progress':
+            '{"selected_plan_id": "monthly", "on_paywall": true}',
+      },
+    );
+    expect(find.text('Subscribe'), findsOneWidget);
+
+    await tester.tap(find.byType(BackButton));
+    await settle(tester);
+    expect(find.text('Sara, your toning plan'), findsOneWidget);
   });
 
   testWidgets('the summary follows an earlier answer she changes', (

@@ -5,6 +5,7 @@ import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_step.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/localized_text.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/option.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/plan.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_config.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_rule.dart';
 
@@ -16,6 +17,7 @@ void main() {
       version: 1,
       steps: [...sampleFlow.steps, extra],
       summary: sampleSummary,
+      plans: samplePlans,
     ),
   );
 
@@ -27,7 +29,12 @@ void main() {
   test('rejects an empty config', () {
     expect(
       () => FlowConfigValidator.validate(
-        FlowConfig(version: 1, steps: const [], summary: sampleSummary),
+        FlowConfig(
+          version: 1,
+          steps: const [],
+          summary: sampleSummary,
+          plans: samplePlans,
+        ),
       ),
       throwsA(isA<InvalidFlowConfigException>()),
     );
@@ -46,6 +53,7 @@ void main() {
         single('first', ['a', 'b'], showIf: const EqCondition('second', 'a')),
         single('second', ['a', 'b']),
       ],
+      plans: samplePlans,
       summary: SummaryConfig(
         headlines: [SummaryRule(text: t('x'))],
         lines: const [],
@@ -200,7 +208,12 @@ void main() {
   group('summary', () {
     List<String> summaryErrors(SummaryConfig summary) =>
         FlowConfigValidator.findErrors(
-          FlowConfig(version: 1, steps: sampleFlow.steps, summary: summary),
+          FlowConfig(
+            version: 1,
+            steps: sampleFlow.steps,
+            summary: summary,
+            plans: samplePlans,
+          ),
         );
 
     test('needs a last headline without a condition', () {
@@ -233,6 +246,40 @@ void main() {
         contains('{nickname}'),
         contains('Summary line 1 is missing ar'),
         contains('unknown option "run_marathon"'),
+      ]);
+    });
+  });
+
+  group('paywall plans', () {
+    List<String> planErrors(List<Plan> plans) => FlowConfigValidator.findErrors(
+      FlowConfig(
+        version: 1,
+        steps: sampleFlow.steps,
+        summary: sampleSummary,
+        plans: plans,
+      ),
+    );
+
+    test('needs at least 2 plans and exactly one default', () {
+      expect(planErrors([samplePlans.last]), [
+        contains('at least 2 plans'),
+        contains('exactly one default_selected'),
+      ]);
+    });
+
+    test('rejects duplicate ids, negative trials and missing languages', () {
+      final broken = Plan(
+        id: 'yearly',
+        title: const LocalizedText({'en': 'Twice'}),
+        priceLabel: t(r'$1'),
+        period: t('per day'),
+        trialDays: -1,
+      );
+
+      expect(planErrors([...samplePlans, broken]), [
+        contains('duplicate plan ids'),
+        contains('negative trial days'),
+        contains('title is missing ar'),
       ]);
     });
   });

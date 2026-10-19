@@ -46,7 +46,8 @@ void main() {
       {},
       bundle: _StringBundle(
         '{"version": 1, "steps": [], '
-        '"summary": {"headlines": [], "lines": []}}',
+        '"summary": {"headlines": [], "lines": []}, '
+        '"paywall": {"plans": []}}',
       ),
     );
 

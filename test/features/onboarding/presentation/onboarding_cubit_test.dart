@@ -164,4 +164,18 @@ void main() {
     await relaunched.load();
     expect(relaunched.state.reachedSummary, isTrue);
   });
+
+  test('reset clears answers and starts at the first step', () async {
+    final cubit = await loaded();
+    cubit
+      ..selectOption('get_back_into_it')
+      ..next()
+      ..setReachedSummary(true)
+      ..reset();
+
+    expect(cubit.state.currentStepId, 'goal');
+    expect(cubit.state.answers, isEmpty);
+    expect(repository.saved?.reachedSummary, isFalse);
+    expect(repository.saved?.answers, isEmpty);
+  });
 }

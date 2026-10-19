@@ -3,6 +3,7 @@ import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/flow_step.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/localized_text.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/option.dart';
+import 'package:traininpink_onboarding/features/onboarding/domain/entities/plan.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_config.dart';
 import 'package:traininpink_onboarding/features/onboarding/domain/entities/summary_rule.dart';
 
@@ -63,7 +64,26 @@ final sampleFlow = FlowConfig(
     FlowStep(id: 'email', type: StepType.email, title: t('email')),
   ],
   summary: sampleSummary,
+  plans: samplePlans,
 );
+
+final samplePlans = [
+  Plan(
+    id: 'yearly',
+    title: t('Yearly'),
+    priceLabel: t(r'$60'),
+    period: t('per year'),
+    trialDays: 7,
+    badge: t('Best value'),
+    defaultSelected: true,
+  ),
+  Plan(
+    id: 'monthly',
+    title: t('Monthly'),
+    priceLabel: t(r'$10'),
+    period: t('per month'),
+  ),
+];
 
 /// Headline picks on goal, with an unconditional fallback; lines come from
 /// a nested branch and a multi-choice, and `{name}` fills in her name.
