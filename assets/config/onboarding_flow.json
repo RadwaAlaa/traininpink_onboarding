@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "steps": [
+    {
+      "id": "goal",
+      "type": "single_choice",
+      "title": { "en": "What's your main goal right now?", "ar": "ما هدفكِ الأساسي حاليًا؟" },
+      "subtitle": { "en": "We'll build your plan around it.", "ar": "سنبني خطتكِ حوله." },
+      "options": [
+        { "id": "build_strength", "label": { "en": "Build strength", "ar": "بناء القوة" } },
+        { "id": "lose_weight", "label": { "en": "Lose weight", "ar": "خسارة الوزن" } },
+        { "id": "tone_up", "label": { "en": "Tone up", "ar": "شدّ الجسم" } },
+        { "id": "get_back_into_it", "label": { "en": "Get back into training", "ar": "العودة إلى التمرين" } }
+      ]
+    },
+    {
+      "id": "last_trained",
+      "type": "single_choice",
+      "title": { "en": "When did you last train regularly?", "ar": "متى تمرّنتِ بانتظام آخر مرة؟" },
+      "show_if": { "eq": ["goal", "get_back_into_it"] },
+      "options": [
+        { "id": "under_3_months", "label": { "en": "Less than 3 months ago", "ar": "منذ أقل من 3 أشهر" } },
+        { "id": "3_to_12_months", "label": { "en": "3–12 months ago", "ar": "منذ 3 إلى 12 شهرًا" } },
+        { "id": "over_a_year", "label": { "en": "More than a year ago", "ar": "منذ أكثر من سنة" } }
+      ]
+    },
+    {
+      "id": "restart_pace",
+      "type": "single_choice",
+      "title": { "en": "How would you like to ease back in?", "ar": "كيف تفضّلين العودة؟" },
+      "show_if": { "eq": ["last_trained", "over_a_year"] },
+      "options": [
+        { "id": "gentle", "label": { "en": "Gently — short, easy sessions", "ar": "بهدوء — جلسات قصيرة وسهلة" } },
+        { "id": "steady", "label": { "en": "Steadily — build up week by week", "ar": "بثبات — زيادة تدريجية كل أسبوع" } }
+      ]
+    },
+    {
+      "id": "experience",
+      "type": "single_choice",
+      "title": { "en": "How would you describe your training experience?", "ar": "كيف تصفين خبرتكِ في التمرين؟" },
+      "show_if": { "not": { "eq": ["goal", "get_back_into_it"] } },
+      "options": [
+        { "id": "beginner", "label": { "en": "Beginner", "ar": "مبتدئة" } },
+        { "id": "intermediate", "label": { "en": "Intermediate", "ar": "متوسطة" } },
+        { "id": "advanced", "label": { "en": "Advanced", "ar": "متقدمة" } }
+      ]
+    },
+    {
+      "id": "focus_areas",
+      "type": "multi_choice",
+      "title": { "en": "Which areas do you want to focus on?", "ar": "ما المناطق التي تريدين التركيز عليها؟" },
+      "subtitle": { "en": "Pick up to 3.", "ar": "اختاري حتى 3." },
+      "max_selected": 3,
+      "options": [
+        { "id": "glutes_legs", "label": { "en": "Glutes & legs", "ar": "الأرداف والساقان" } },
+        { "id": "core", "label": { "en": "Core", "ar": "عضلات الجذع" } },
+        { "id": "arms_back", "label": { "en": "Arms & back", "ar": "الذراعان والظهر" } },
+        { "id": "full_body", "label": { "en": "Full body", "ar": "الجسم بالكامل" } }
+      ]
+    },
+    {
+      "id": "back_pain",
+      "type": "single_choice",
+      "title": { "en": "Do you get lower-back pain?", "ar": "هل تعانين من ألم أسفل الظهر؟" },
+      "subtitle": { "en": "We'll adapt your core moves if so.", "ar": "سنعدّل تمارين الجذع إن كان كذلك." },
+      "show_if": { "contains": ["focus_areas", "core"] },
+      "options": [
+        { "id": "often", "label": { "en": "Often", "ar": "غالبًا" } },
+        { "id": "sometimes", "label": { "en": "Sometimes", "ar": "أحيانًا" } },
+        { "id": "never", "label": { "en": "Never", "ar": "أبدًا" } }
+      ]
+    },
+    {
+      "id": "pain_notes",
+      "type": "text",
+      "title": { "en": "Anything we should know about it?", "ar": "هل هناك ما يجب أن نعرفه عنه؟" },
+      "subtitle": { "en": "Optional — for example, what makes it worse.", "ar": "اختياري — مثلًا ما الذي يزيده سوءًا." },
+      "required": false,
+      "max_length": 200,
+      "show_if": { "in": ["back_pain", ["often", "sometimes"]] }
+    },
+    {
+      "id": "days_per_week",
+      "type": "single_choice",
+      "title": { "en": "How many days a week can you train?", "ar": "كم يومًا في الأسبوع يمكنكِ التمرين؟" },
+      "options": [
+        { "id": "two", "label": { "en": "2 days", "ar": "يومان" } },
+        { "id": "three", "label": { "en": "3 days", "ar": "3 أيام" } },
+        { "id": "four", "label": { "en": "4 days", "ar": "4 أيام" } },
+        { "id": "five_plus", "label": { "en": "5 or more days", "ar": "5 أيام أو أكثر" } }
+      ]
+    },
+    {
+      "id": "equipment",
+      "type": "single_choice",
+      "title": { "en": "Where will you train?", "ar": "أين ستتمرّنين؟" },
+      "options": [
+        { "id": "home_none", "label": { "en": "At home, no equipment", "ar": "في المنزل، بدون معدات" } },
+        { "id": "home_dumbbells", "label": { "en": "At home, with dumbbells", "ar": "في المنزل، مع أثقال يدوية" } },
+        { "id": "gym", "label": { "en": "At the gym", "ar": "في النادي الرياضي" } }
+      ]
+    },
+    {
+      "id": "barbell",
+      "type": "single_choice",
+      "title": { "en": "Want to include barbell lifts?", "ar": "هل تريدين إضافة تمارين البار الحديدي؟" },
+      "show_if": {
+        "all": [
+          { "eq": ["equipment", "gym"] },
+          { "any": [
+            { "eq": ["goal", "build_strength"] },
+            { "in": ["experience", ["intermediate", "advanced"]] }
+          ] }
+        ]
+      },
+      "options": [
+        { "id": "yes", "label": { "en": "Yes, I'm keen", "ar": "نعم، أنا متحمسة" } },
+        { "id": "not_yet", "label": { "en": "Not yet", "ar": "ليس الآن" } }
+      ]
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "title": { "en": "What should we call you?", "ar": "بماذا نناديكِ؟" },
+      "max_length": 40
+    },
+    {
+      "id": "email",
+      "type": "email",
+      "title": { "en": "Where should we send your plan?", "ar": "إلى أين نرسل خطتكِ؟" },
+      "subtitle": { "en": "We'll only use it for your plan — no spam.", "ar": "سنستخدمه لخطتكِ فقط — بلا رسائل مزعجة." }
+    }
+  ]
+}
