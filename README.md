@@ -40,6 +40,12 @@ _To be written._
 - Conditions only branch on choice steps (`eq`/`in` on single choice, `contains` on multi choice), never on free text: exact matching on typed text is too fragile to drive the flow.
 - A required multi-choice step without `min_selected` needs at least one pick.
 - Saved progress that can't be read, or was saved against a different config `version`, is discarded and she starts fresh — it never blocks the app.
+- Every step, single choice included, is answered and then confirmed with Continue (no auto-advance), so all step types behave the same and nothing moves on from a mis-tap.
+- Taps are ignored while a step transition (or the push to the summary) is running, so a double tap can never skip a step.
+- With saved progress the app opens straight on the onboarding route; the splash stays underneath, so back from the first question returns to it.
+- Moving from the last question to the summary is the one navigation call made in a button handler instead of a `BlocListener`: a "completed" state would need resetting every time she comes back to edit, so the page pushes the route directly and the cubit stays a plain record of her answers.
+- Progress is saved on every real change, including each keystroke in a text field. Writes are tiny and local, and saving on blur instead would lose text if the app is killed mid-answer.
+- An optional step left blank shows "Skip" instead of "Continue".
 - Config models only generate `fromJson` (`createToJson: false`): the app reads the config but never writes it, so a `toJson` would be dead code. Progress models, which are saved, have both.
 - Saved progress is checked against the current config on resume: answers off the path are dropped, and if her saved step is no longer on the path she restarts at the first step.
 - The config's `summary` and `paywall` sections are added in the phases that use them (5 and 6), so the parser only knows about what the app reads.

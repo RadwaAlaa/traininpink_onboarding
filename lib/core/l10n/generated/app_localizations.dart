@@ -116,12 +116,6 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get continueLabel;
 
-  /// Placeholder heading for the onboarding screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Tell us about you'**
-  String get onboardingTitle;
-
   /// Heading of the personalised summary screen.
   ///
   /// In en, this message translates to:
@@ -145,6 +139,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'العربية'**
   String get switchLanguage;
+
+  /// Call-to-action on an optional step she left blank.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// Screen-reader label for the onboarding progress bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String stepProgress(int current, int total);
+
+  /// Placeholder in free-text answer fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your answer'**
+  String get textHint;
+
+  /// Placeholder in the email field.
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get emailHint;
+
+  /// Inline error under an invalid email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get emailError;
+
+  /// Shown if the bundled onboarding config fails to load.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load your questions. Please restart the app.'**
+  String get loadError;
 }
 
 class _AppLocalizationsDelegate

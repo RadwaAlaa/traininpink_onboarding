@@ -19,9 +19,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get continueLabel => 'متابعة';
 
   @override
-  String get onboardingTitle => 'أخبرينا عنكِ';
-
-  @override
   String get summaryTitle => 'خطتكِ';
 
   @override
@@ -32,4 +29,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get switchLanguage => 'English';
+
+  @override
+  String get skip => 'تخطي';
+
+  @override
+  String stepProgress(int current, int total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get textHint => 'اكتبي إجابتكِ';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get emailError => 'أدخلي بريدًا إلكترونيًا صحيحًا';
+
+  @override
+  String get loadError => 'تعذّر تحميل الأسئلة. يُرجى إعادة تشغيل التطبيق.';
 }
