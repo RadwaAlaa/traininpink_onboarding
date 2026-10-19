@@ -50,4 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get loadError =>
       'We couldn\'t load your questions. Please restart the app.';
+
+  @override
+  String get seePlans => 'See plans';
 }

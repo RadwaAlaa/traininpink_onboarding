@@ -15,8 +15,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If she has started, skip the splash and resume where she left off.
-    final resume = dependencies.onboardingCubit.state.hasStarted;
+    // Rebuild the stack she left: splash, then the questions if she started,
+    // then the summary if she reached it. Back still walks the same way.
+    final saved = dependencies.onboardingCubit.state;
+    final initialRoutes = [
+      RouteNames.splash,
+      if (saved.hasStarted) RouteNames.onboarding,
+      if (saved.reachedSummary) RouteNames.summary,
+    ];
 
     return MultiBlocProvider(
       providers: [
@@ -31,7 +37,10 @@ class App extends StatelessWidget {
           locale: locale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
-          initialRoute: resume ? RouteNames.onboarding : RouteNames.splash,
+          onGenerateInitialRoutes: (_) => [
+            for (final name in initialRoutes)
+              AppRouter.onGenerateRoute(RouteSettings(name: name)),
+          ],
           onGenerateRoute: AppRouter.onGenerateRoute,
         ),
       ),

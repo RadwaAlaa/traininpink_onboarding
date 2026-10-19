@@ -49,4 +49,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get loadError => 'تعذّر تحميل الأسئلة. يُرجى إعادة تشغيل التطبيق.';
+
+  @override
+  String get seePlans => 'عرض الخطط';
 }

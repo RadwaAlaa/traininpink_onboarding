@@ -175,6 +175,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn\'t load your questions. Please restart the app.'**
   String get loadError;
+
+  /// Summary call-to-action that opens the paywall.
+  ///
+  /// In en, this message translates to:
+  /// **'See plans'**
+  String get seePlans;
 }
 
 class _AppLocalizationsDelegate

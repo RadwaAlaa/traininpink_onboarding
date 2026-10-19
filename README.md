@@ -45,6 +45,8 @@ _To be written._
 - With saved progress the app opens straight on the onboarding route; the splash stays underneath, so back from the first question returns to it.
 - Moving from the last question to the summary is the one navigation call made in a button handler instead of a `BlocListener`: a "completed" state would need resetting every time she comes back to edit, so the page pushes the route directly and the cubit stays a plain record of her answers.
 - Progress is saved on every real change, including each keystroke in a text field. Writes are tiny and local, and saving on blur instead would lose text if the app is killed mid-answer.
+- The summary is config too: `summary.headlines` (first match wins, the last has no `show_if`) and `summary.lines` (every match shows), using the same conditions as steps, evaluated only on answers left on her path. `{step_id}` fills in a required, always-shown text answer such as `{name}`.
+- Reaching the summary is saved, so a relaunch rebuilds splash → questions → summary and back still walks the same way.
 - An optional step left blank shows "Skip" instead of "Continue".
 - Config models only generate `fromJson` (`createToJson: false`): the app reads the config but never writes it, so a `toJson` would be dead code. Progress models, which are saved, have both.
 - Saved progress is checked against the current config on resume: answers off the path are dropped, and if her saved step is no longer on the path she restarts at the first step.

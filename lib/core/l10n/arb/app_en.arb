@@ -59,5 +59,9 @@
   "loadError": "We couldn't load your questions. Please restart the app.",
   "@loadError": {
     "description": "Shown if the bundled onboarding config fails to load."
+  },
+  "seePlans": "See plans",
+  "@seePlans": {
+    "description": "Summary call-to-action that opens the paywall."
   }
 }
