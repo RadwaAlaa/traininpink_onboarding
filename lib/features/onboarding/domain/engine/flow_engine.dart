@@ -1,6 +1,7 @@
 import '../entities/answer.dart';
 import '../entities/flow_config.dart';
 import '../entities/flow_step.dart';
+import '../entities/progress.dart';
 
 /// Pure branching logic. Every method recomputes from scratch, so the result
 /// depends only on the config and the answers passed in — never on history.
@@ -37,6 +38,23 @@ class FlowEngine {
       for (final entry in answers.entries)
         if (ids.contains(entry.key)) entry.key: entry.value,
     };
+  }
+
+  /// Saved progress made safe for this config, or null if it was saved
+  /// against another version. Answers off the path are dropped, and a saved
+  /// step that is no longer on the path restarts her at the first step.
+  Progress? restore(Progress saved) {
+    if (saved.flowVersion != config.version) return null;
+
+    final path = resolvePath(saved.answers);
+    final onPath = path.any((step) => step.id == saved.currentStepId);
+    // A validated config's first step has no show_if, so the path is never
+    // empty.
+    return Progress(
+      flowVersion: saved.flowVersion,
+      currentStepId: onPath ? saved.currentStepId : path.first.id,
+      answers: pruneAnswers(path, saved.answers),
+    );
   }
 
   /// The step after [currentId] on [path], or null at the end (or if

@@ -39,6 +39,10 @@ _To be written._
 - A step's `show_if` only sees answers to steps already on the path, so a leftover answer from a skipped step can never switch a later step on.
 - Conditions only branch on choice steps (`eq`/`in` on single choice, `contains` on multi choice), never on free text: exact matching on typed text is too fragile to drive the flow.
 - A required multi-choice step without `min_selected` needs at least one pick.
+- Saved progress that can't be read, or was saved against a different config `version`, is discarded and she starts fresh — it never blocks the app.
+- Config models only generate `fromJson` (`createToJson: false`): the app reads the config but never writes it, so a `toJson` would be dead code. Progress models, which are saved, have both.
+- Saved progress is checked against the current config on resume: answers off the path are dropped, and if her saved step is no longer on the path she restarts at the first step.
+- The config's `summary` and `paywall` sections are added in the phases that use them (5 and 6), so the parser only knows about what the app reads.
 
 ## What was cut and why
 
