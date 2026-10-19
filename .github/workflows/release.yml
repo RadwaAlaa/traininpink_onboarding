@@ -1,0 +1,60 @@
+# Builds a release APK from every push to main and publishes it as a
+# GitHub release. Can also be run by hand from the Actions tab.
+name: Release APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One release at a time; a newer push to main waits for the running one.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the tag and the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17" # matches android/app/build.gradle.kts
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.7" # matches README / CLAUDE.md
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Generated *.g.dart and l10n files are committed, so no codegen step.
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      # The run number becomes the Android versionCode, so every release
+      # installs over the previous one.
+      - name: Build release APK
+        run: flutter build apk --release --build-number=${{ github.run_number }}
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(grep '^version:' pubspec.yaml | cut -d' ' -f2 | cut -d+ -f1)
+          tag="v${version}-build.${{ github.run_number }}"
+          cp build/app/outputs/flutter-apk/app-release.apk "traininpink-${tag}.apk"
+          gh release create "$tag" "traininpink-${tag}.apk" \
+            --target "${{ github.sha }}" \
+            --title "TrainInPink ${tag}" \
+            --generate-notes
