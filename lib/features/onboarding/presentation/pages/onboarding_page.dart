@@ -54,6 +54,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     if (!cubit.state.isLastStep) return cubit.next();
 
     setState(() => _busy = true);
+    cubit.setReachedSummary(true);
     await Navigator.pushNamed(context, RouteNames.summary);
     if (mounted) setState(() => _busy = false);
   }

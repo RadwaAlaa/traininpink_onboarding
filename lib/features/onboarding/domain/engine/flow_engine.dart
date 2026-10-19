@@ -41,19 +41,24 @@ class FlowEngine {
   }
 
   /// Saved progress made safe for this config, or null if it was saved
-  /// against another version. Answers off the path are dropped, and a saved
-  /// step that is no longer on the path restarts her at the first step.
+  /// against another version. Answers off the path are dropped, a saved step
+  /// that is no longer on the path restarts her at the first step, and the
+  /// summary only reopens if every step on the path is answered.
   Progress? restore(Progress saved) {
     if (saved.flowVersion != config.version) return null;
 
     final path = resolvePath(saved.answers);
     final onPath = path.any((step) => step.id == saved.currentStepId);
+    final answers = pruneAnswers(path, saved.answers);
+    // Reopen the summary only if every question on the path is still answered.
+    final complete = path.every((step) => step.isComplete(answers[step.id]));
     // A validated config's first step has no show_if, so the path is never
     // empty.
     return Progress(
       flowVersion: saved.flowVersion,
       currentStepId: onPath ? saved.currentStepId : path.first.id,
-      answers: pruneAnswers(path, saved.answers),
+      answers: answers,
+      reachedSummary: saved.reachedSummary && onPath && complete,
     );
   }
 
