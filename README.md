@@ -31,6 +31,8 @@ _To be written._
 ## Assumptions
 
 - Target platforms are Android and iOS only (desktop/web removed).
+- One bundled font, **Cairo** (SIL OFL, `assets/fonts/OFL.txt`), covers both Latin and Arabic, so mixed EN/AR text stays visually consistent and nothing is fetched over the network.
+- No use-case layer: at this size cubits depend directly on domain repository interfaces.
 
 ## What was cut and why
 

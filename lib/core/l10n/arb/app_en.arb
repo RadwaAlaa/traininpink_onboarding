@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "TrainInPink",
+  "@appTitle": { "description": "App name shown in the task switcher and on the splash screen." },
+  "getStarted": "Get started",
+  "@getStarted": { "description": "Splash call-to-action that starts onboarding." },
+  "continueLabel": "Continue",
+  "@continueLabel": { "description": "Primary call-to-action that moves to the next screen." },
+  "onboardingTitle": "Tell us about you",
+  "@onboardingTitle": { "description": "Placeholder heading for the onboarding screen." },
+  "summaryTitle": "Your plan",
+  "@summaryTitle": { "description": "Heading of the personalised summary screen." },
+  "paywallTitle": "Choose your plan",
+  "@paywallTitle": { "description": "Heading of the paywall screen." },
+  "doneTitle": "You're all set",
+  "@doneTitle": { "description": "Heading of the final confirmation screen." },
+  "switchLanguage": "العربية",
+  "@switchLanguage": { "description": "Language toggle label: always the name of the OTHER language, in that language." }
+}
