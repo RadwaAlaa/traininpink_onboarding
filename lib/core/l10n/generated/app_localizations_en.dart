@@ -19,9 +19,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueLabel => 'Continue';
 
   @override
-  String get onboardingTitle => 'Tell us about you';
-
-  @override
   String get summaryTitle => 'Your plan';
 
   @override
@@ -32,4 +29,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get switchLanguage => 'العربية';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String stepProgress(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get textHint => 'Type your answer';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get emailError => 'Enter a valid email address';
+
+  @override
+  String get loadError =>
+      'We couldn\'t load your questions. Please restart the app.';
 }

@@ -3,9 +3,14 @@
   "appTitle": "ترين إن بينك",
   "getStarted": "ابدئي الآن",
   "continueLabel": "متابعة",
-  "onboardingTitle": "أخبرينا عنكِ",
   "summaryTitle": "خطتكِ",
   "paywallTitle": "اختاري خطتكِ",
   "doneTitle": "كل شيء جاهز",
-  "switchLanguage": "English"
+  "switchLanguage": "English",
+  "skip": "تخطي",
+  "stepProgress": "الخطوة {current} من {total}",
+  "textHint": "اكتبي إجابتكِ",
+  "emailHint": "you@example.com",
+  "emailError": "أدخلي بريدًا إلكترونيًا صحيحًا",
+  "loadError": "تعذّر تحميل الأسئلة. يُرجى إعادة تشغيل التطبيق."
 }

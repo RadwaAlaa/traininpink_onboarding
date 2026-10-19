@@ -15,8 +15,15 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => dependencies.createLocaleCubit(),
+    // If she has started, skip the splash and resume where she left off.
+    final resume = dependencies.onboardingCubit.state.hasStarted;
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => dependencies.createLocaleCubit()),
+        // Above the navigator, so the summary and paywall can read her answers.
+        BlocProvider.value(value: dependencies.onboardingCubit),
+      ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) => MaterialApp(
           onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
@@ -24,7 +31,7 @@ class App extends StatelessWidget {
           locale: locale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
-          initialRoute: RouteNames.splash,
+          initialRoute: resume ? RouteNames.onboarding : RouteNames.splash,
           onGenerateRoute: AppRouter.onGenerateRoute,
         ),
       ),
